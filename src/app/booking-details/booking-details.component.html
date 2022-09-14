@@ -1,0 +1,110 @@
+<app-header></app-header>
+<div class="container card" style="padding-top: 10px;">
+    <form #bookingForm="ngForm" >
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-3">
+                <label for="bookingId">Booking Id</label>
+                <input type="text" [disabled]="!idEdit" pInputText class="form-control" required [(ngModel)]="booking.bookingId" name="bookingId"> 
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-3">
+                <label for="trainNumber">Train Number</label>
+                <input id="" type="text" [disabled]="!editable" pInputText class="form-control" required [(ngModel)]="booking.trainNumber" name="trainNumber"> 
+            </div>
+            <div class="p-field p-col-9">
+                <label for="trainName">Train Name</label>
+                <input id="" type="text" [disabled]="!editable" pInputText class="form-control" required [(ngModel)]="booking.trainName" name="trainName"> 
+            </div>
+            <div class="p-field p-col-3">
+                <label for="ticketPrice">Ticket Price</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">₹</span>
+                    <input type="text" [disabled]="!editable" pInputText class="form-control" required [(ngModel)]="booking.ticketPrice" name="ticketPrice">      
+                </div> 
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-3">
+                <label for="departureDate">Departure Date</label>
+                <p-calendar [disabled]="!editable" required [(ngModel)]="booking.departureDate" inputId="dob"></p-calendar> 
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-3">
+                <label for="departureStation">Departure Station</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.departureStation" name="departureStation"> 
+            </div>
+            <div class="p-field p-col-3">
+                <label for="arrivalStation">Arrival Station</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.arrivalStation" name="arrivalStation"> 
+            </div>
+            <div class="p-field p-col-3">
+                <label for="stop1">Stop 1</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.stop1" name="stop1"> 
+            </div>
+            <div class="p-field p-col-3">
+                <label for="stop2">Stop 2</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.stop2" name="stop2"> 
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12">
+                <label for="isReturnBooking">Return Booking</label>
+                <div class="p-formgroup-inline">
+                    <div class="p-field-radiobutton">
+                    <p-radioButton name="returnBooking" value="Yes"  id="returnYes"></p-radioButton>
+                    <label for="returnYes">Yes</label>
+                    </div>
+                    <div class="p-field-radiobutton">
+                        <p-radioButton name="returnBooking" value="No" id="returnNo"></p-radioButton>
+                        <label for="returnNo">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="p-field p-col-4">
+                <label for="returnDate">Return Date</label>
+                <p-calendar [disabled]="!editable" required [(ngModel)]="booking.returnDate" name="returnDate"></p-calendar> 
+            </div>
+            <div class="p-field p-col-4">
+                <label for="returnStop1">Return Stop 1</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.returnStop1" name="returnStop1"> 
+            </div>
+            <div class="p-field p-col-4">
+                <label for="returnStop2">Return Stop 2</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.returnStop2" name="returnStop2"> 
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-4">
+                <label for="createdSource">Created Source</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.createdSource" name="createdSource"> 
+            </div>
+            <div class="p-field p-col-4">
+                <label for="createdSourceType">Created Source Type</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.createdSourceType" name="createdSourceType"> 
+            </div>
+            <div class="p-field p-col-4">
+                <label for="createdDttm">Created Date & time</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.createdDttm" name="createdDttm"> 
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-4">
+                <label for="modifiedSource">Modified Source</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.modifiedSource" name="modifiedSource"> 
+            </div>
+            <div class="p-field p-col-4">
+                <label for="modifiedSourceType">Modified Source Type</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.modifiedSourceType" name="modifiedSourceType"> 
+            </div>
+            <div class="p-field p-col-4">
+                <label for="modifiedDttm">Modified Date & time</label>
+                <input id="" [disabled]="!editable" type="text" pInputText class="form-control" required [(ngModel)]="booking.modifiedDttm" name="modifiedDttm"> 
+            </div>
+        </div>
+        <button (click)="goToBookingList()">Cancel</button>&nbsp;
+        <button *ngIf="!editable" (click)="onEdit()">Edit</button>&nbsp;
+        <button *ngIf="editable" (click)="updateBooking()">Save</button>
+    </form>
+</div>

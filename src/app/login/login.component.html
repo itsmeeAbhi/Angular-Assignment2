@@ -1,0 +1,50 @@
+
+  <div class="container card" style=" width: 30%;">
+    <div class="card-body">
+      <div style="text-align:center ;">
+        <img style="margin-top:25px;"  src="https://itorizon.com/wp-content/uploads/2020/10/Logo-Itorizon-2017.png" alt="link broken" width="50%">
+        <h3 style="text-align: center ;" >Welcome</h3>
+        <h6 style="text-align: center ;">Please use Registered Username & Password to login into your Account</h6>
+      </div>
+        <form #loginForm="ngForm" (ngSubmit)="loginUser()">
+            <div class="form-group">
+              <label>Email address</label>
+              <input type="email" class="form-control" 
+                name="employeeId" id="employeeId" 
+                placeholder="Enter email" 
+                [(ngModel)]="user.employeeId"
+                #email="ngModel"
+                [class.is-invalid]="email.invalid && email.touched"
+              />
+              <small  
+                class="text-danger" 
+                [class.d-none]="email.valid || email.untouched" >
+                Please enter valid email.
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input 
+                type="password" class="form-control" 
+                id="password"  placeholder="Password" name="password"
+                [(ngModel)]="user.password" 
+                required #pass="ngModel" 
+                [class.is-invalid]="pass.invalid && pass.touched"
+              >
+              <small  
+                class="text-danger" 
+                [class.d-none]="pass.valid || pass.untouched" >
+                Please enter valid Password.
+              </small>
+            </div>
+            <div>
+              <p></p>
+              <button style="width:100%;" type="submit" class="btn btn-primary" [disabled]="email.invalid || pass.invalid">
+                Login
+              </button>
+            </div>
+            <small class="text-danger">{{msg}}</small>
+
+          </form>
+    </div>
+  </div>

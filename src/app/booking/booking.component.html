@@ -1,0 +1,98 @@
+<app-header></app-header>
+<div class="content">
+    <div class="card">
+        <p-toolbar styleClass="mb-4">
+            <ng-template pTemplate="left">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    <span class="p-input-icon-right">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Search by BookingID"/>
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="right">
+                <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                    (click)="checkBooking()" pTooltip="Click to Add Record">
+                </button>
+            </ng-template>
+        </p-toolbar>
+    
+        <p-table #dt [rowHover]="true" [value]="bookingList" responsiveLayout="scroll"
+            styleClass="p-datatable-striped" [globalFilterFields]="['bookingId','firstName']" [paginator]="true"
+            [rows]="10" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[5,10,25]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Booking Id</th>
+                    <th>Train Number</th>
+                    <th>Train Name</th>
+                    <th>Ticket Price</th>
+                    <th>Departure Date</th>
+                    <th>Return Booking</th>
+                    <th>Return Date</th>
+                    <th>Departure Station</th>
+                    <th>Arrival Station</th>
+                    <th>Created Source</th>
+                    <th>Created SrcType</th>
+                    <th>Created DateTime</th>
+                    <th>Modified Source</th>
+                    <th>Modified SrcType</th>
+                    <th>Modified DateTime</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-bookingList let-rowData>
+                <tr (dblclick)="viewBooking(bookingList.bookingId)" style="height:10px">
+                    <td>{{bookingList.bookingId}}</td>
+                    <td>{{bookingList.trainNumber}}</td>
+                    <td>{{bookingList.trainName}}</td>
+                    <td>{{bookingList.ticketPrice}}</td>
+                    <td>{{bookingList.departureDate}}</td>
+                    <td>{{bookingList.isReturnBooking}}</td>
+                    <td>{{bookingList.returnDate}}</td>
+                    <td>{{bookingList.departureStation}}</td>
+                    <td>{{bookingList.arrivalStation}}</td>
+                    <td>{{bookingList.createdSource}}</td>
+                    <td>{{bookingList.createdSourceType}}</td>
+                    <td>{{bookingList.createdDttm}}</td>
+                    <td>{{bookingList.modifiedSource}}</td>
+                    <td>{{bookingList.modifiedSourceType}}</td>
+                    <td>{{bookingList.modifiedDttm}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                            (click)="deleteBooking(bookingList.bookingId)" pTooltip="Click to delete Record"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td style="text-align: center; color:red;" colspan="16">No Records found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <p-dialog [(visible)]="checkBookDialog" [style]="{width: '400px'}" header="Add New Booking" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="p-field p-col-12">
+                <label for="bookingId">Booking Id</label>
+                <input type="text" pInputText id="bookingId" [(ngModel)]="booking.bookingId" required autofocus />
+                <small class="p-invalid" *ngIf="submitted && !booking.bookingId">field is required.</small>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <div class="p-field p-col-12">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Check" icon="pi pi-check" class="p-button-text"
+                    (click)="checkBookings()">
+                </button>
+            </div>
+            <span>
+                <small class="text-danger" *ngIf="bookingExist">Booking Already Exist!</small>
+            </span>
+        </ng-template>
+    </p-dialog>
+</div>

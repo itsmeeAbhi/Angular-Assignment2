@@ -2,10 +2,11 @@ export class Booking{
     bookingId:string;
 	trainNumber:string;
 	trainName:string;
+	passenger:Array<string>;
 	ticketPrice:string;
-	departureDate:string;
-	isReturnBooking:string;
-	returnDate:string;
+	departureDate:Date;
+	returnBooking:string;
+	returnDate:Date;
 	departureStation:string;
 	arrivalStation:string;
 	stop1:string;

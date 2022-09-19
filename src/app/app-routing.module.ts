@@ -16,8 +16,6 @@ const routes: Routes = [
   { path: 'booking', canActivate: [AuthGuard], component: BookingComponent },
   { path: 'booking-details/:bookingId', canActivate: [AuthGuard], component: BookingDetailsComponent },
   {path:'**', component: InvalidComponent}
-
-  // { path: '**', redirectTo: '/home' }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

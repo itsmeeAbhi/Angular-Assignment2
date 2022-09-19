@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Booking } from '../Model/booking';
 
 @Injectable({
@@ -8,13 +8,18 @@ import { Booking } from '../Model/booking';
 })
 export class BookingService {
 
+  // editable=new Subject()
+
   constructor(private http:HttpClient) { }
   getBookinglist():Observable<any>{
     return this.http.get("http://localhost:9091/TrainBooking/findAllBooking");
   }
   
   addBooking(booking:Booking):Observable<any>{
+    // console.log(booking);
+    
     return this.http.post("http://localhost:9091/TrainBooking/addBooking",booking,{responseType: 'text'});
+
   }
   deleteBooking(bookingId): Observable<any> {
     let params = new HttpParams()

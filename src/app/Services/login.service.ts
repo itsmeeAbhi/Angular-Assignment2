@@ -19,13 +19,13 @@ export class LoginService {
   constructor(private http: HttpClient) { }
   isloggedIn = true;
   loggedIn = false;
-  loggedOut= false;
+  loggedOut = false;
   userLogin = true;
 
 
   isAuthneticated() {
     this.loggedIn = (localStorage.getItem('user') === 'true');
-    this.isloggedIn= (localStorage.getItem('admin')==='true');
+    this.isloggedIn = (localStorage.getItem('admin') === 'true');
     const promise = new Promise(
       (resolve) => {
         setTimeout(() => {
@@ -35,7 +35,7 @@ export class LoginService {
     );
     return promise;
   }
-  islogout(){
+  islogout() {
     this.loggedOut = !(localStorage.getItem('user') === 'true');
 
     const promise = new Promise(
@@ -54,13 +54,12 @@ export class LoginService {
         params: new HttpParams().set('employeeId', user.employeeId).set('password', user.password)
       });
   }
-
-  // public checkUserType(user): Observable<any> {
-  //   return this.http.get<User[]>("http://localhost:9090/userAccount/findbyempid",
-  //     {
-  //       params: new HttpParams().set('employeeId', user.employeeId)
-  //     });
-  // }
+  public checkUserType(user): Observable<any> {
+    return this.http.get<User[]>("http://localhost:9091/userAccount/findbyempid",
+      {
+        params: new HttpParams().set('employeeId', user.employeeId)
+      });
+  }
   logout() {
     this.logoutUser.next(false);
     this.user.next(null);

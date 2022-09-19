@@ -13,6 +13,7 @@ import { LoginService } from '../Services/login.service';
 export class BookingComponent implements OnInit {
 
   checkBookDialog: boolean;
+  deleteDialog:boolean;
   booking: Booking;
   bookingExist: boolean = false;
   bookingList: any;
@@ -25,16 +26,16 @@ export class BookingComponent implements OnInit {
   constructor(private bookservice: BookingService, private router: Router, private messageService: MessageService, private service: LoginService) { }
   ngOnInit() {
     this.getBooking()
-    this.userLogin = (localStorage.getItem('admin') === 'true')
-    this.service.loggedInuser.subscribe(res => {
-      this.loginUser = res;
-      console.log(res);
+    // this.userLogin = (localStorage.getItem('admin') === 'true') 
+    // this.service.loggedInuser.subscribe(res => {
+    //   this.loginUser = res;
+    //   console.log(res);
 
-    })
-    this.service.loggedInType.subscribe(res => {
-      this.loginUserType = res;
-      console.log(res);
-    })
+    // })
+    // this.service.loggedInType.subscribe(res => {
+    //   this.loginUserType = res;
+    //   console.log(res);
+    // })
   }
   getBooking() {
     this.booking = {
@@ -42,9 +43,10 @@ export class BookingComponent implements OnInit {
       trainNumber: '',
       trainName: '',
       ticketPrice: '',
-      departureDate: '',
-      isReturnBooking: '',
-      returnDate: '',
+      passenger:[],
+      departureDate:new Date(),
+      returnBooking: '',
+      returnDate: new Date(),
       departureStation: '',
       arrivalStation: '',
       stop1: '',
@@ -61,8 +63,8 @@ export class BookingComponent implements OnInit {
     this.bookservice.getBookinglist().subscribe(
       data => {
         this.bookingList = data;
-        console.log(this.bookingList);
-        console.log("Response Received")
+        // console.log(this.bookingList);
+        // console.log("Response Received")
       },
       error => console.log("Error Occured")
     )
@@ -70,37 +72,19 @@ export class BookingComponent implements OnInit {
   checkBooking() {
     this.submitted = false;
     this.checkBookDialog = true;
+    localStorage.setItem("editable",'true');
+  }
+  deleteRecord(bookingId:any) {
+    this.submitted = false;
+    this.booking.bookingId= bookingId;
+    this.deleteDialog = true;
   }
 
   hideDialog() {
     this.submitted = false;
     this.checkBookDialog = false;
     this.bookingExist = false;
-
-  }
-
-  addBooking() {
-    this.submitted = true;
-    this.bookingExist = false;
-    this.booking.createdSource = this.loginUser
-    this.booking.createdSourceType = this.loginUserType
-    this.bookservice.addBooking(this.booking).subscribe(
-      (data) => {
-        console.log("Data Added ");
-        this.submitted = true;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Added', life: 1000 });
-        this.getBooking()
-      },
-      (error) => {
-        console.log(error);
-        this.messageService.add({ severity: 'error', summary: 'Successful', detail: 'Employee cannot be Added', life: 2000 });
-        this.submitted = false;
-      },
-      () => {
-        // this.empDialog = false;
-
-      }
-    );
+    this.deleteDialog =false;
   }
 
   checkBookings() {
@@ -112,6 +96,7 @@ export class BookingComponent implements OnInit {
       },
       error: (error) => {
         this.router.navigate(['booking-details', this.booking.bookingId])
+        localStorage.setItem('bookid',this.booking.bookingId);
       }
     })
   }
@@ -122,6 +107,7 @@ export class BookingComponent implements OnInit {
         data => {
           console.log(data);
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Booking Deleted', life: 1000 });
+          this.deleteDialog =false;
         },
         error => {
           console.log(error);

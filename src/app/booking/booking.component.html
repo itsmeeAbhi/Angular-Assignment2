@@ -49,9 +49,9 @@
                     <td>{{bookingList.trainNumber}}</td>
                     <td>{{bookingList.trainName}}</td>
                     <td>{{bookingList.ticketPrice}}</td>
-                    <td>{{bookingList.departureDate}}</td>
-                    <td>{{bookingList.isReturnBooking}}</td>
-                    <td>{{bookingList.returnDate}}</td>
+                    <td>{{bookingList.departureDate | date}}</td>
+                    <td>{{bookingList.returnBooking}}</td>
+                    <td>{{bookingList.returnDate | date}}</td>
                     <td>{{bookingList.departureStation}}</td>
                     <td>{{bookingList.arrivalStation}}</td>
                     <td>{{bookingList.createdSource}}</td>
@@ -62,7 +62,7 @@
                     <td>{{bookingList.modifiedDttm}}</td>
                     <td>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                            (click)="deleteBooking(bookingList.bookingId)" pTooltip="Click to delete Record"></button>
+                            (click)="deleteRecord(bookingList.bookingId)" pTooltip="Click to delete Record"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -76,18 +76,36 @@
     <p-dialog [(visible)]="checkBookDialog" [style]="{width: '400px'}" header="Add New Booking" [modal]="true"
         styleClass="p-fluid">
         <ng-template pTemplate="content">
+            <form #checkBookingForm="ngForm">
+                <div class="p-field p-col-12">
+                    <label for="bookingId">Booking Id</label>
+                    <input type="text" pInputText id="bookingId" [(ngModel)]="booking.bookingId" required autofocus name="bookingId"/>
+                    <small class="p-invalid" *ngIf="submitted && !booking.bookingId">field is required.</small>
+                </div>
+                <button pButton pRipple label="Cancel" class="p-button-danger"
+                    (click)="hideDialog()"></button>
+                <button [disabled]="checkBookingForm.invalid" pButton pRipple label="Check" class="p-button-info"
+                    (click)="checkBookings()">
+                </button>
+            </form>
+            <span>
+                <small class="text-danger" *ngIf="bookingExist">Booking Already Exist!</small>
+            </span>
+        </ng-template>
+    </p-dialog>
+    <p-dialog [(visible)]="deleteDialog" [style]="{width: '600px'}" header="Confirm" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
             <div class="p-field p-col-12">
-                <label for="bookingId">Booking Id</label>
-                <input type="text" pInputText id="bookingId" [(ngModel)]="booking.bookingId" required autofocus />
-                <small class="p-invalid" *ngIf="submitted && !booking.bookingId">field is required.</small>
+                <h5> Are you sure you want to delete this record</h5>
             </div>
         </ng-template>
         <ng-template pTemplate="footer">
             <div class="p-field p-col-12">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Check" icon="pi pi-check" class="p-button-text"
-                    (click)="checkBookings()">
+                <button pButton pRipple label="No" icon="pi pi-times" class="p-button-text p-button-danger" autofocus
+                    (click)="hideDialog()"></button>&nbsp;
+                <button pButton pRipple label="Yes" icon="pi pi-check" class="p-button-text"
+                    (click)="deleteBooking(booking.bookingId)">
                 </button>
             </div>
             <span>

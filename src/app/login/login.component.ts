@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     this.service.loginUserFromRestApi(this.user).subscribe(
       data => {
         if (data) {
-          localStorage.setItem("loginData", JSON.stringify(this.user));
+          // localStorage.setItem("loginData", JSON.stringify(this.user));
           this.service.isAuth.next(true);
           this.service.user.next(this.user)
           this.router.navigate(['home']);
@@ -42,17 +42,18 @@ export class LoginComponent implements OnInit {
 
     );
 
-    // this.service.checkUserType(this.user).subscribe(
-    //   data => {
-    //     this.service.loggedInuser.next(data.employeeId);
-    //     this.service.loggedInType.next(data.employeeId);
-    //     console.log(data.employeeId);
-    //     if (data.type === "Admin") {
-    //       localStorage.setItem("admin", "true")
-    //       localStorage.setItem("userType", "admin")
-    //     }
-    //   }
-    // )
+    this.service.checkUserType(this.user).subscribe(
+      data => {
+        console.log(data)
+        this.service.loggedInuser.next(data.employeeId);
+        this.service.loggedInType.next(data.employeeId);
+        console.log(data.employeeId);
+        if (data.type === "admin") {
+          localStorage.setItem("admin", "true")
+          localStorage.setItem("userType", "admin")
+        }
+      }
+    )
   }
 
 }

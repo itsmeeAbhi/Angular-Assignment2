@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Booking } from '../Model/booking';
@@ -17,7 +18,7 @@ export class BookingDetailsComponent implements OnInit {
   isEditable = false;
   bookId: any;
   idEdit: boolean = false;
-  submitted: boolean;
+  inAddMode: boolean = false;
   bookingList: any;
   isRet: boolean = false;
   minDate: Date;
@@ -27,8 +28,7 @@ export class BookingDetailsComponent implements OnInit {
   loginUser: string;
   loginUserType: string;
   passengerName: string;
-  constructor(private router: Router, private bookingservice: BookingService, private service:LoginService, private messageService: MessageService, private route: ActivatedRoute) { }
-
+  constructor(private router: Router, private bookingservice: BookingService, private service: LoginService, private messageService: MessageService, private route: ActivatedRoute) { }
   getBooking() {
     this.booking = {
       bookingId: '',
@@ -50,11 +50,8 @@ export class BookingDetailsComponent implements OnInit {
       createdDttm: new Date(),
       modifiedSource: '',
       modifiedSourceType: '',
-      modifiedDttm: ''
+      modifiedDttm: new Date()
     };
-
-    // console.log(this.booking.passenger.toString());
-
   }
   ngOnInit(): void {
     this.getBooking();
@@ -83,16 +80,19 @@ export class BookingDetailsComponent implements OnInit {
     this.invalidDates = [today, invalidDate];
 
     this.editable = (localStorage.getItem("editable") === 'true')
-    this.userLogin = (localStorage.getItem('admin') === 'true') 
+    this.userLogin = (localStorage.getItem('admin') === 'true')
+    this.inAddMode = (localStorage.getItem('addMode') === 'true')
     this.service.loggedInuser.subscribe(res => {
       this.loginUser = res;
-      console.log(res);
-
     })
     this.service.loggedInType.subscribe(res => {
       this.loginUserType = res;
-      console.log(res);
     })
+  }
+  dateValidation() {
+    if (this.booking.departureDate > this.booking.returnDate) {
+      alert('Return Date invalid, should be greater than or equal to Departure date');
+    }
   }
   goToBookingList() {
     this.router.navigate(['/booking']);
@@ -104,28 +104,22 @@ export class BookingDetailsComponent implements OnInit {
   }
   addBooking() {
     if (!this.isEditable) {
+      this.inAddMode = !this.inAddMode // true
       localStorage.setItem("editable", "false");
       this.booking.createdSource = this.loginUser
       this.booking.createdSourceType = this.loginUserType
-      this.booking.passenger = this.passengerName.split(",")
-      // console.log(this.booking);
-      // console.log(this.booking.passenger.length);
-
+      this.booking.passenger = this.passengerName.split(" ")
       this.bookingservice.addBooking(this.booking).subscribe(
         (data) => {
-          console.log("Data Added ");
-          this.submitted = true;
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Booking Added', life: 1000 });
           this.goToBookingList()
         },
         (error) => {
           console.log(error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Booking cannot be Added', life: 2000 });
-          this.submitted = false;
         },
         () => {
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Booking Added', life: 2000 });
           console.log("Completed");
-
         }
       );
     } else {
@@ -133,7 +127,11 @@ export class BookingDetailsComponent implements OnInit {
     }
   }
   updateBooking() {
+    console.log(this.loginUser);
     this.booking.passenger = this.passengerName.split(",")
+    this.booking.modifiedSource = this.loginUser;
+    this.booking.modifiedSourceType = this.loginUserType;
+    this.booking.modifiedDttm = new Date();
     this.bookingservice.updateBooking(this.booking).subscribe(data => {
       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Booking Updated', life: 2000 });
       this.goToBookingList();
@@ -144,15 +142,25 @@ export class BookingDetailsComponent implements OnInit {
         console.log(error);
       });
   }
-  // viewBooking(bookingId: any) {
-  //   this.router.navigate(['booking-details', this.booking.bookingId]);
-  // }
-  isReturn(){
-    console.log("selected Yes");
-    this.isRet=true;
-    
+  viewBooking(bookingId: any) {
+    if (!this.inAddMode) {
+      this.router.navigate(['booking-details', this.booking.bookingId]);
+      this.editable = false;
+      this.isEditable = false;
+      this.refresh()
+    } else {
+      this.goToBookingList();
+      localStorage.setItem("addMode", "false");
+    }
+
   }
-  isNotReturn(){
-    this.isRet=false;
+  isReturn() {
+    this.isRet = true;
+  }
+  isNotReturn() {
+    this.isRet = false;
+  }
+  refresh(): void {
+    window.location.reload();
   }
 }

@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <app-header></app-header>
 <div class="content">
     <div class="card">
@@ -19,13 +20,13 @@
         </p-toolbar>
     
         <p-table #dt [rowHover]="true" [value]="bookingList" responsiveLayout="scroll"
-            styleClass="p-datatable-striped" [globalFilterFields]="['bookingId','firstName']" [paginator]="true"
+            styleClass="p-datatable-striped" [globalFilterFields]="['trainName','departureDate','returnDate']" [paginator]="true"
             [rows]="10" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [rowsPerPageOptions]="[5,10,25]">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Booking Id</th>
+                    <th pSortableColumn="bookingId">Booking Id<p-sortIcon field="bookingId"></p-sortIcon></th>
                     <th>Train Number</th>
                     <th>Train Name</th>
                     <th>Ticket Price</th>
@@ -56,10 +57,10 @@
                     <td>{{bookingList.arrivalStation}}</td>
                     <td>{{bookingList.createdSource}}</td>
                     <td>{{bookingList.createdSourceType}}</td>
-                    <td>{{bookingList.createdDttm}}</td>
+                    <td>{{bookingList.createdDttm | date:'medium'}}</td>
                     <td>{{bookingList.modifiedSource}}</td>
                     <td>{{bookingList.modifiedSourceType}}</td>
-                    <td>{{bookingList.modifiedDttm}}</td>
+                    <td>{{bookingList.modifiedDttm | date:'medium'}}</td>
                     <td>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
                             (click)="deleteRecord(bookingList.bookingId)" pTooltip="Click to delete Record"></button>
@@ -114,3 +115,4 @@
         </ng-template>
     </p-dialog>
 </div>
+<app-footer></app-footer><br><br>

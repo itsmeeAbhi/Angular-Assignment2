@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Booking } from '../Model/booking';
@@ -11,13 +12,11 @@ import { LoginService } from '../Services/login.service';
   styleUrls: ['./booking.component.css']
 })
 export class BookingComponent implements OnInit {
-
   checkBookDialog: boolean;
   deleteDialog:boolean;
   booking: Booking;
   bookingExist: boolean = false;
   bookingList: any;
-  submitted: boolean;
   userLogin = false;
   loginUser: string;
   loginUserType: string;
@@ -26,17 +25,8 @@ export class BookingComponent implements OnInit {
   constructor(private bookservice: BookingService, private router: Router, private messageService: MessageService, private service: LoginService) { }
   ngOnInit() {
     this.getBooking()
-    // this.userLogin = (localStorage.getItem('admin') === 'true') 
-    // this.service.loggedInuser.subscribe(res => {
-    //   this.loginUser = res;
-    //   console.log(res);
-
-    // })
-    // this.service.loggedInType.subscribe(res => {
-    //   this.loginUserType = res;
-    //   console.log(res);
-    // })
   }
+  @ViewChild('checkBookingForm') form: NgForm;
   getBooking() {
     this.booking = {
       bookingId: '',
@@ -46,7 +36,7 @@ export class BookingComponent implements OnInit {
       passenger:[],
       departureDate:new Date(),
       returnBooking: '',
-      returnDate: new Date(),
+      returnDate:new Date(),
       departureStation: '',
       arrivalStation: '',
       stop1: '',
@@ -58,33 +48,29 @@ export class BookingComponent implements OnInit {
       createdDttm: new Date(),
       modifiedSource: '',
       modifiedSourceType: '',
-      modifiedDttm: ''
+      modifiedDttm: new Date()
     };
     this.bookservice.getBookinglist().subscribe(
       data => {
         this.bookingList = data;
-        // console.log(this.bookingList);
-        // console.log("Response Received")
       },
       error => console.log("Error Occured")
     )
   }
   checkBooking() {
-    this.submitted = false;
     this.checkBookDialog = true;
     localStorage.setItem("editable",'true');
   }
   deleteRecord(bookingId:any) {
-    this.submitted = false;
     this.booking.bookingId= bookingId;
     this.deleteDialog = true;
   }
 
   hideDialog() {
-    this.submitted = false;
     this.checkBookDialog = false;
     this.bookingExist = false;
     this.deleteDialog =false;
+    this.form.reset();
   }
 
   checkBookings() {
@@ -93,10 +79,12 @@ export class BookingComponent implements OnInit {
       next: res => {
         console.log(res);
         this.bookingExist = true;
+        this.form.reset();
       },
       error: (error) => {
         this.router.navigate(['booking-details', this.booking.bookingId])
         localStorage.setItem('bookid',this.booking.bookingId);
+        localStorage.setItem('addMode','true');
       }
     })
   }
@@ -116,9 +104,7 @@ export class BookingComponent implements OnInit {
           this.getBooking()
         }
       );
-
   }
-
   viewBooking(bookingId: any) {
     this.router.navigate(['booking-details', bookingId]);
   }

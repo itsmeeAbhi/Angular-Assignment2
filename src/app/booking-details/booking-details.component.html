@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <app-header></app-header>
 <div class="container card" style="padding-top: 10px;">
-    <form #bookingForm="ngForm" >
+    <form #bookingForm="ngForm">
         <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col-3">
                 <label for="bookingId">Booking Id</label>
@@ -12,10 +12,10 @@
             <div class="p-field p-col-3">
                 <label for="trainNumber">Train Number</label>
                 <input id="" type="text" [disabled]="!editable" pInputText class="form-control" 
-                        required [(ngModel)]="booking.trainNumber" name="trainNumber"
+                        required [(ngModel)]="booking.trainNumber" name="trainNumber" pattern=".{5}"
                         #trainNumber="ngModel">
                 <small class="text-danger" [class.d-none]="trainNumber.valid || trainNumber.untouched" >
-                    Train number Mandatory.
+                    Train number required & must be 5 digits.
                 </small> 
             </div>
             <div class="p-field p-col-5">
@@ -28,30 +28,49 @@
                 </small> 
             </div>
             <div class="p-field p-col-4">
-                <label for="passenger">Passenger Name</label>
-                <input type="text" [disabled]="!editable" pInputText class="form-control" 
-                     [(ngModel)]="passengerName" name="passenger"
-                        #passenger="ngModel">
-                <small class="text-danger" [class.d-none]="passenger.valid || passenger.untouched" >
-                    Field cannot be empty.
-                </small> 
-            </div>
-            <div class="p-field p-col-3">
                 <label for="ticketPrice">Ticket Price</label>
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon">₹</span>
                     <input type="text" [disabled]="!editable" pInputText class="form-control" 
-                            required [(ngModel)]="booking.ticketPrice" name="ticketPrice" #ticketPrice="ngModel">      
+                            required [(ngModel)]="booking.ticketPrice" name="ticketPrice" #ticketPrice="ngModel" pattern="[0-9].{2,}">      
                 </div>
                 <small class="text-danger" [class.d-none]="ticketPrice.valid || ticketPrice.untouched" >
                     Field cannot be empty.
                 </small>
             </div>
+            <div class="p-field p-col-3">
+                <label for="passenger">Passenger Details</label>
+                <div class="p-inputgroup">
+                    <!-- <p-table [value]="passengerName" styleClass="p-datatable-striped">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Passenger Name</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-passengerName>
+                            <tr>
+                                <td>{{passengerName}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table> -->
+                    <input type="text" [disabled]="!editable" pInputText class="form-control" 
+                     [(ngModel)]="passengerName" name="passenger"
+                        #passenger="ngModel">
+                <span class="p-inputgroup-addon">
+                    <button pButton pRipple routerLink="/login" icon="pi pi-plus" label="Add"
+                        class="p-button-secondary mr-2" pTooltip="Add Passenger">
+                </button>
+                </span>
+                </div>
+                <small class="text-danger" [class.d-none]="passenger.valid || passenger.untouched" >
+                    Field cannot be empty.
+                </small> 
+            </div>
         </div>
         <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col-12">
                 <label for="departureDate">Departure Date</label>
-                <p-calendar [disabled]="!editable" required  [(ngModel)]="booking.departureDate" inputId="dob" name="departureDate" [showIcon]="true" [minDate]="minDate" [maxDate]="maxDate"></p-calendar> 
+                <p-calendar [disabled]="!editable" required  [(ngModel)]="booking.departureDate" inputId="dob" name="departureDate" [minDate]="minDate" [maxDate]="maxDate"></p-calendar> 
             </div>
         </div>
         <div class="p-fluid p-formgrid p-grid">
@@ -90,7 +109,10 @@
         <div *ngIf="isRet" class="p-fluid p-formgrid p-grid">
             <div  class="p-field p-col-4">
                 <label for="returnDate">Return Date</label>
-                <p-calendar [disabled]="!editable" required [(ngModel)]="booking.returnDate" name="returnDate"></p-calendar> 
+                <p-calendar [disabled]="!editable" required [(ngModel)]="booking.returnDate" 
+                            (click)="dateValidation()" [minDate]="minDate" [maxDate]="maxDate" 
+                            name="returnDate" #returnDate></p-calendar>
+                <!-- <small class="text-danger" [class.d-none]="returnDate.valid">Date should be greater than Departure date</small>  -->
             </div>
             <div class="p-field p-col-4">
                 <label for="returnStop1">Return Stop 1</label>
@@ -137,18 +159,14 @@
                 pTooltip="Click to edit record" tooltipPosition="right">
         </button>
         <button *ngIf="editable" pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-danger p-button-sm"
-                (click)="goToBookingList()" pTooltip="Back to list screen" tooltipPosition="left">
+                (click)="viewBooking(booking.bookingId)" pTooltip="Back to list screen" tooltipPosition="left">
         </button>
-        <!-- <button *ngIf="editable" [disabled]="bookingForm.invalid || bookingForm.untouched"  pButton pRipple label="Save" 
-                icon="pi pi-check" class="p-button-success p-button-sm" 
-                style="margin-left: 5px;" (click)="updateBooking()" 
-                pTooltip="Click to save record" tooltipPosition="right">
-        </button> -->
-        <button *ngIf="editable" pButton pRipple label="Add" 
+        <button *ngIf="editable" [disabled]="bookingForm.invalid || bookingForm.untouched" pButton pRipple label="Save" 
                 icon="pi pi-check" class="p-button-success p-button-sm" 
                 style="margin-left: 5px;" (click)="addBooking()" 
                 pTooltip="Click to save record" tooltipPosition="right">
         </button>
-        <!-- <button (click)="addBooking()">Add</button> -->
     </form>
 </div>
+<app-footer></app-footer><br><br>
+

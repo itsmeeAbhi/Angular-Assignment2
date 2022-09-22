@@ -18,6 +18,6 @@ export class Booking{
 	createdDttm:Date;
 	modifiedSource:string;
 	modifiedSourceType:string;
-	modifiedDttm:string;
+	modifiedDttm:Date;
 
 }

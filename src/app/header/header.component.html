@@ -3,12 +3,12 @@
         <img src="https://itorizon.com/wp-content/uploads/2020/10/Logo-Itorizon-2017.png" alt="link broken!">
     </div>
     <div class="logout">
-      <button pButton pRipple routerLink="/login" icon="pi pi-sign-out"
+      <button pButton pRipple routerLink="/login" icon="pi pi-sign-out" label="{{loggedInuser | titlecase}}"
               class="p-button-secondary mr-2" (click)="onLogout()" pTooltip="logout">
       </button>
     </div>
 </div>
-    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #0c4e7d;width: 100%;">
+    <nav class="navbar navbar-expand-lg" style="background-color: #0c4e7d;width: 100%;">
         <div class="container-fluid">
           <a class="navbar-brand" style="color: white;"><b>Train Ticket Booking System</b></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
